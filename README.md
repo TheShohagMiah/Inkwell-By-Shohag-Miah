@@ -1,208 +1,181 @@
-# Setup both at once
+# ✍️ Inkwell — Full Stack Blog & Content Management System
 
-mkdir blog-cms && cd blog-cms
+> A modern, feature-rich Blog CMS built with the MERN Stack (MongoDB, Express.js, React, Node.js). Supports rich text editing with TipTap, role-based access control, real-time comments, image uploads via Cloudinary, dark/light mode, and a full admin dashboard.
 
-# Backend
-
-mkdir server && cd server
-npm init -y
-npm install express mongoose dotenv bcryptjs jsonwebtoken
-npm install cors helmet morgan multer cloudinary
-npm install --save-dev nodemon
-
-# Frontend
-
-cd ..
-npm create vite@latest client -- --template react
-cd client
-npm install axios react-router-dom zustand
-npm install @tiptap/react @tiptap/pm @tiptap/starter-kit
-
-```
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://mongodb.com)
+[![Express](https://img.shields.io/badge/Express-4.x-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
 ---
 
-### 🔵 Phase 2 — Database & Models First
+## 📌 Table of Contents
 
-Before any routes or UI, define your **MongoDB schemas**:
-```
-
-✅ User Model
-✅ Post Model
-✅ Category Model
-✅ Comment Model
-
-```
-
-This forces you to **think about your data structure** before writing any logic — like an architect drawing blueprints before building.
-
----
-
-### 🔵 Phase 3 — Backend API (Week 1–2)
-
-Build all your API endpoints first:
-```
-
-Auth Routes
-├── POST /api/auth/register
-├── POST /api/auth/login
-└── GET /api/auth/me
-
-Post Routes
-├── GET /api/posts ← all posts
-├── GET /api/posts/:slug ← single post
-├── POST /api/posts ← create post
-├── PUT /api/posts/:id ← update post
-└── DELETE /api/posts/:id ← delete post
-
-Category Routes
-├── GET /api/categories
-├── POST /api/categories
-└── DELETE /api/categories/:id
-
-Comment Routes
-├── GET /api/comments/:postId
-├── POST /api/comments
-└── DELETE /api/comments/:id
-
-Upload Routes
-└── POST /api/upload ← image to Cloudinary
-
-```
+- [Overview](#-overview)
+- [Live Demo](#-live-demo)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [API Documentation](#-api-documentation)
+- [Screenshots](#-screenshots)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
-### 🔵 Phase 4 — Test API with Postman / Thunder Client
+## 🧭 Overview
 
-**Before touching frontend**, test every single endpoint:
-```
+**BlogCMS** is a production-ready, full-stack content management system designed for writers, developers, and teams who need a powerful yet elegant blogging platform. Built entirely with JavaScript — from the database to the UI — it provides a seamless authoring experience with a Notion-like rich text editor, SEO metadata management, category and tag organization, nested comments, and a dedicated admin panel.
 
-✅ Register user → get token
-✅ Login → get token
-✅ Create post with token
-✅ Get all posts
-✅ Get post by slug
-✅ Update post
-✅ Delete post
-✅ Upload image
-✅ Add comment
-
-```
-
-> 💡 This is what professional developers do — **never assume the API works**, always verify first.
+Whether you are building a personal blog, a developer community platform, or a multi-author publication — BlogCMS gives you full control over your content and readers.
 
 ---
 
-### 🔵 Phase 5 — Frontend (Week 2–3)
+## 🌐 Live Demo
 
-Now build UI with **real API data** from day one:
-```
-
-Pages to build in order:
-
-1. Auth Pages
-   ├── /register
-   └── /login
-
-2. Public Pages
-   ├── / ← Home (post feed)
-   ├── /blog/:slug ← Single post page
-   └── /category/:name ← Category filter
-
-3. Protected Pages
-   ├── /dashboard ← Author dashboard
-   ├── /posts/create ← Create post (TipTap)
-   └── /posts/edit/:id ← Edit post
-
-4. Admin Pages
-   ├── /admin ← Admin overview
-   ├── /admin/posts ← Manage all posts
-   ├── /admin/users ← Manage users
-   └── /admin/comments ← Moderate comments
-
-```
-
----
-
-### 🔵 Phase 6 — Connect & Polish (Week 3–4)
-```
-
-✅ Connect all API calls with Axios
-✅ Add loading states & error handling
-✅ Add protected routes (JWT check)
-✅ Add toast notifications
-✅ Make it fully responsive
-✅ Add SEO meta tags
-
-```
-
----
-
-## 📊 Full Timeline
-```
-
-Week 1
-├── Day 1 → Project setup + folder structure
-├── Day 2 → MongoDB models (User, Post, Category, Comment)
-├── Day 3 → Auth API (register, login, JWT)
-├── Day 4 → Post API (CRUD)
-└── Day 5 → Upload + Category + Comment API
-
-Week 2
-├── Day 1 → Test all APIs with Postman
-├── Day 2 → React setup + routing + Axios config
-├── Day 3 → Auth pages (login, register)
-├── Day 4 → Home page + Post feed
-└── Day 5 → Single post page + TipTap renderer
-
-Week 3
-├── Day 1 → Create/Edit post page + TipTap editor
-├── Day 2 → Dashboard page
-├── Day 3 → Admin panel
-├── Day 4 → Comments section
-└── Day 5 → Responsive design + Polish
-
-Week 4
-├── Day 1-2 → Bug fixes + error handling
-├── Day 3 → Environment variables + security
-└── Day 4-5 → Deploy (Vercel + Render + MongoDB Atlas)
-
-```
-
----
-
-## 🧰 Tools to Use Per Phase
-
-| Phase | Tool |
+| Interface | URL |
 |---|---|
-| API Testing | **Postman** or **Thunder Client** (VS Code) |
-| DB Management | **MongoDB Compass** |
-| Version Control | **Git + GitHub** (commit after each feature) |
-| Environment Vars | **.env files** (never push to GitHub) |
-| API Docs | **Swagger** or simple **README** |
+| **Client (Blog)** | [https://blogcms.vercel.app](https://blogcms.vercel.app) |
+| **Admin Dashboard** | [https://blogcms.vercel.app/admin](https://blogcms.vercel.app/admin) |
+| **API Health** | [https://blogcms-api.onrender.com/api/health](https://blogcms-api.onrender.com/api/health) |
+
+> **Demo Credentials**
+>
+> Author — `author@demo.com` / `Demo@1234`
+>
+> Admin — `admin@demo.com` / `Admin@1234`
 
 ---
 
-## 💡 Golden Rules
+## ✨ Features
 
-> **1.** Always build **Models → Routes → Controllers → Frontend** in that order
+### 👤 Authentication & Authorization
+- JWT-based authentication with secure `httpOnly` cookies
+- Role-based access control — `reader`, `author`, `admin`
+- Password hashing with bcrypt (salt rounds: 12)
+- Protected routes on both frontend and backend
+- Auto-generated username from display name
 
-> **2.** Never hardcode data — if the API isn't ready, build the API first
+### 📝 Rich Text Editor
+- **TipTap** editor with a floating bubble menu and slash commands
+- Support for Headings (H1–H3), Bold, Italic, Underline, Strikethrough
+- Ordered & unordered lists, Task lists with checkboxes
+- Blockquotes, Code blocks with syntax highlighting (Lowlight)
+- Image upload with Cloudinary integration
+- YouTube video embeds
+- Table support
+- Character & word count
+- Content saved as both HTML and JSON in MongoDB
 
-> **3.** Commit to GitHub **after every completed feature** — not at the end
+### 📰 Blog Public Interface
+- Responsive post feed with pagination
+- Post filtering by category, tag, and author
+- Full-text search across titles, content, and tags
+- Single post page with Table of Contents (TOC), reading progress bar
+- Estimated read time per post
+- Like and bookmark posts
+- Nested comments (2 levels deep) with like support
+- Related posts section
+- Author profile pages
 
-> **4.** Test every API endpoint in **Postman before** writing frontend code
+### 🖥 Admin Dashboard
+- Overview with key stats — total posts, users, comments, views
+- Manage all posts — publish, archive, feature, delete
+- Manage all users — assign roles, activate/deactivate
+- Moderate comments — approve, reject, mark as spam
+- Category management with color and icon support
+- Analytics charts — views over time, top posts, traffic sources
+- Dark and light mode toggle
 
-> **5.** Use **.env** from day one — never hardcode secrets or URLs
+### 🗂 Content Management
+- Draft, Published, Archived, and Scheduled post statuses
+- SEO fields — meta title, meta description, meta keywords
+- Cover image upload with Cloudinary
+- Auto-generated SEO-friendly slugs
+- Tag and category assignment per post
+- Featured posts and Editor's Picks
+- Post scheduling with a scheduled publish date
+
+### 🎨 UI / UX
+- Fully responsive — mobile, tablet, desktop
+- Dark mode and light mode with persistent preference (Zustand + localStorage)
+- Custom design system with CSS variables
+- Reusable UI components — Button, Input, Textarea, Badge, Modal, Spinner
+- Toast notifications (react-hot-toast)
+- Skeleton loading states
+- Smooth page transitions
 
 ---
 
-## 🎯 Summary
-```
+## 🛠 Tech Stack
 
-❌ Don't do this:
-Frontend → stuck with fake data → rewrite later
+### Backend
+| Technology | Purpose |
+|---|---|
+| **Node.js** | Runtime environment |
+| **Express.js** | REST API framework |
+| **MongoDB** | NoSQL database |
+| **Mongoose** | ODM for MongoDB |
+| **JSON Web Token (JWT)** | Authentication |
+| **bcryptjs** | Password hashing |
+| **Cloudinary** | Image storage & CDN |
+| **Multer** | File upload handling |
+| **Slugify** | Auto slug generation |
+| **Morgan** | HTTP request logger |
+| **Helmet** | HTTP security headers |
+| **CORS** | Cross-Origin Resource Sharing |
 
-✅ Do this:
-Setup → Models → Backend API → Test → Frontend → Deploy
-# Inkwell-By-Shohag-Miah
+### Frontend
+| Technology | Purpose |
+|---|---|
+| **React 19** | UI library |
+| **Vite 8** | Build tool & dev server |
+| **Tailwind CSS 4** | Utility-first CSS framework |
+| **React Router DOM v7** | Client-side routing |
+| **Zustand** | Lightweight state management |
+| **Axios** | HTTP client with interceptors |
+| **TipTap** | Rich text editor |
+| **React Hot Toast** | Toast notifications |
+| **React Icons** | Icon library |
+| **Recharts** | Analytics charts |
+
+### DevOps & Deployment
+| Service | Purpose |
+|---|---|
+| **MongoDB Atlas** | Cloud database |
+| **Cloudinary** | Media storage |
+| **Render** | Backend hosting |
+| **Vercel** | Frontend hosting |
+| **GitHub Actions** | CI/CD pipeline |
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 👨‍💻 Author
+
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
+- Portfolio: [yourportfolio.com](https://yourportfolio.com)
+
+---
+
+## ⭐ Show Your Support
+
+If you found this project helpful, please give it a **star** ⭐ on GitHub — it means a lot and helps others discover this project!
+
+---
+
+## 🔍 Keywords
+
+`mern-stack` `blog-cms` `content-management-system` `react` `nodejs` `express` `mongodb` `tiptap-editor` `tailwindcss` `jwt-authentication` `role-based-access-control` `cloudinary` `admin-dashboard` `dark-mode` `full-stack-javascript` `rest-api` `zustand` `vite` `mongoose` `blog-platform`
