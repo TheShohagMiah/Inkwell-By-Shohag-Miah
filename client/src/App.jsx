@@ -8,6 +8,8 @@ import Blogs from "./pages/Blogs";
 import SearchPage from "./pages/SearchPage";
 import PrivateRoute from "./components/PrivateRoute";
 import AddPost from "./pages/admin/AddPost";
+import AddCategory from "./pages/admin/AddCategory";
+import Categories from "./pages/admin/Categories";
 
 // Loading Component
 const PageLoader = () => (
@@ -33,7 +35,7 @@ const App = () => {
           {/* --- PUBLIC ROUTES --- */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
-            <Route path="blog/:id" element={<PostDetails />} />
+            <Route path="posts/:id" element={<PostDetails />} />
             <Route path="blogs" element={<Blogs />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
@@ -61,6 +63,13 @@ const App = () => {
               {/* <Route path="edit/:id" element={<CreatePost />} /> */}
             </Route>
 
+            {/* Matches sidebar: /admin/posts (Archive_Ledger) */}
+            <Route path="categories">
+              <Route index element={<Categories />} /> {/* /admin/posts */}
+              <Route path="add" element={<AddCategory />} />{" "}
+              {/* /admin/posts/add */}
+              {/* <Route path="edit/:id" element={<CreatePost />} /> */}
+            </Route>
             {/* Placeholder Redirect: hit /admin -> go to /admin/dashboard */}
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
           </Route>

@@ -8,11 +8,16 @@ import {
   StretchHorizontal,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get("q") || "";
+  const rawQuery = searchParams.get("q") || "";
   const [viewMode, setViewMode] = useState("grid");
+  const displayQuery = rawQuery.trim() || "Archive";
+  const pageTitle = rawQuery.trim()
+    ? `Search: ${rawQuery.trim()} // INKWELL`
+    : "Library Archive // INKWELL";
 
   const results = [
     {
@@ -61,29 +66,39 @@ const SearchPage = () => {
   ];
 
   return (
-    <div className="bg-main min-h-screen transition-colors duration-500 pb-24">
-      {/* 1. Refined Header Section */}
-      <header className="py-12 lg:py-16 border-b border-border-soft">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="space-y-2">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-txt-muted">
-              Database Inquiry
-            </p>
-            <h1 className="text-4xl md:text-5xl font-semibold tracking-tighter text-txt-main leading-none">
-              Found{" "}
-              <span className="text-txt-muted font-light underline decoration-border-base underline-offset-8">
-                {query || "Archive"}
+    <div className="min-h-screen bg-main text-txt-main pb-24 transition-colors duration-500 selection:bg-brand-primary/20">
+      <Helmet>
+        <title>{pageTitle}</title>
+      </Helmet>
+
+      {/* --- HEADER --- */}
+      <header className="relative overflow-hidden border-b border-border-soft py-16 lg:py-24 bg-soft/30">
+        {/* Subtle Brand Glow using your accent color */}
+        <div className="absolute right-0 top-0 h-full w-1/3 rounded-full bg-brand-accent/5 blur-[120px] pointer-events-none" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-6 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-primary shadow-[0_0_8px_var(--color-brand-primary)]" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-txt-muted">
+                Database Inquiry
+              </p>
+            </div>
+            <h3 className="text-2xl font-bold uppercase tracking-tighter text-txt-main md:text-4xl leading-none">
+              {rawQuery ? "Found " : "The "}
+              <span className="font-light italic lowercase tracking-normal text-txt-muted underline underline-offset-[12px] decoration-brand-primary/30 ml-4">
+                {displayQuery}
               </span>
-            </h1>
+            </h3>
           </div>
 
-          {/* Grid Switcher */}
-          <div className="flex items-center gap-1 bg-soft p-1.5 rounded-xl border border-border-soft">
+          {/* View Mode Switcher */}
+          <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-soft p-1">
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-2 rounded-lg transition-all cursor-pointer ${
+              className={`rounded-lg p-2 transition-all cursor-pointer ${
                 viewMode === "grid"
-                  ? "bg-main text-txt-main shadow-sm"
+                  ? "bg-main text-txt-main shadow-sm border border-border-soft"
                   : "text-txt-muted hover:text-txt-main"
               }`}
             >
@@ -91,9 +106,9 @@ const SearchPage = () => {
             </button>
             <button
               onClick={() => setViewMode("list")}
-              className={`p-2 rounded-lg transition-all cursor-pointer ${
+              className={`rounded-lg p-2 transition-all cursor-pointer ${
                 viewMode === "list"
-                  ? "bg-main text-txt-main shadow-sm"
+                  ? "bg-main text-txt-main shadow-sm border border-border-soft"
                   : "text-txt-muted hover:text-txt-main"
               }`}
             >
@@ -103,13 +118,21 @@ const SearchPage = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
+      <main className="mx-auto max-w-7xl px-6 py-16">
+        {/* Metadata Bar */}
+        <div className="mb-16 flex items-center justify-between border-b border-border-soft pb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-txt-muted">
+          <span>Result Count: {results.length}</span>
+          <span className="hidden opacity-60 italic md:block uppercase">
+            Index Search Optimized
+          </span>
+        </div>
+
         <motion.div
           layout
           className={
             viewMode === "grid"
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16"
-              : "max-w-4xl mx-auto flex flex-col gap-10"
+              ? "grid grid-cols-1 gap-x-12 gap-y-20 sm:grid-cols-2 lg:grid-cols-3"
+              : "mx-auto flex max-w-4xl flex-col gap-12"
           }
         >
           <AnimatePresence mode="popLayout">
@@ -117,57 +140,55 @@ const SearchPage = () => {
               <motion.article
                 layout
                 key={post.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04 }}
-                className={`group cursor-pointer ${
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                className={`group relative cursor-pointer ${
                   viewMode === "list"
-                    ? "flex flex-col md:flex-row gap-8 items-start border-b border-border-soft pb-10 last:border-0"
+                    ? "flex flex-col items-center gap-10 border-b border-border-soft pb-12 last:border-0 md:flex-row"
                     : "flex flex-col"
                 }`}
               >
-                {/* Thumbnail */}
+                {/* Thumbnail using 'bg-soft' and 'border-border-soft' */}
                 <div
-                  className={`bg-soft rounded-2xl overflow-hidden relative transition-all duration-500 group-hover:border-border-base border border-border-soft shrink-0 ${
+                  className={`relative shrink-0 overflow-hidden rounded-[2.5rem] border border-border-soft bg-soft transition-all duration-700 group-hover:border-brand-primary/30 ${
                     viewMode === "grid"
-                      ? "aspect-video mb-6"
-                      : "aspect-video w-full md:w-56"
+                      ? "aspect-[16/10] mb-8"
+                      : "aspect-video w-full md:w-64"
                   }`}
                 >
-                  <div className="absolute inset-0 bg-linear-to-b from-transparent to-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-brand-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                  <div className="absolute inset-0 flex items-center justify-center font-black italic text-txt-main/5 text-5xl transition-colors group-hover:text-brand-primary/10">
+                    {post.cat.charAt(0)}
+                  </div>
                 </div>
 
-                <div className="flex-1 space-y-3">
-                  {/* Meta */}
-                  <div className="flex items-center gap-3 text-[10px] font-semibold text-txt-muted tracking-widest uppercase">
-                    <span className="text-txt-main/70">{post.cat}</span>
-                    <span className="w-1 h-1 bg-border-base rounded-full" />
-                    <span className="flex items-center gap-1.5">
-                      <Clock size={12} className="opacity-50" /> {post.time}
+                <div className="flex-1 space-y-4">
+                  <div className="flex items-center gap-4 text-[9px] font-bold uppercase tracking-[0.3em] text-brand-primary">
+                    <span>{post.cat}</span>
+                    <span className="h-1 w-1 rounded-full bg-border-base" />
+                    <span className="flex items-center gap-1.5 text-txt-muted">
+                      <Clock size={12} className="opacity-60" /> {post.time}
                     </span>
                   </div>
 
-                  {/* Title */}
                   <h2
-                    className={`${
-                      viewMode === "grid" ? "text-xl" : "text-2xl"
-                    } font-semibold text-txt-main tracking-tight group-hover:text-txt-muted transition-colors leading-tight`}
+                    className={`font-bold tracking-tighter text-txt-main transition-colors group-hover:text-txt-muted ${
+                      viewMode === "grid" ? "text-2xl" : "text-3xl"
+                    }`}
                   >
                     {post.title}
                   </h2>
 
-                  {/* Excerpt */}
-                  <p className="text-sm text-txt-muted leading-relaxed line-clamp-2 font-light tracking-tight">
+                  <p className="text-sm font-light leading-relaxed tracking-tight text-txt-muted line-clamp-2 md:text-base">
                     {post.excerpt}
                   </p>
 
-                  <div className="pt-2">
-                    <span className="inline-flex items-center gap-2 text-[11px] font-bold text-txt-main tracking-widest uppercase border-b-2 border-transparent group-hover:border-border-base transition-all pb-1">
+                  <div className="pt-4">
+                    <span className="inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.4em] text-txt-main transition-all group-hover:gap-6">
                       View Insight{" "}
-                      <ArrowRight
-                        size={14}
-                        className="group-hover:translate-x-1 transition-transform"
-                      />
+                      <ArrowRight size={14} className="text-brand-primary" />
                     </span>
                   </div>
                 </div>
@@ -176,16 +197,23 @@ const SearchPage = () => {
           </AnimatePresence>
         </motion.div>
 
-        {/* Empty State */}
+        {/* --- EMPTY STATE --- */}
         {results.length === 0 && (
-          <div className="py-32 text-center space-y-4">
-            <SearchIcon
-              size={32}
-              className="mx-auto text-border-base opacity-50"
-            />
-            <p className="text-txt-muted text-[11px] uppercase tracking-[0.3em] font-semibold">
-              No results matched your query
-            </p>
+          <div className="flex flex-col items-center gap-8 py-48 text-center">
+            <div className="relative rounded-full border border-border-soft bg-soft p-10">
+              <SearchIcon
+                size={40}
+                className="text-border-base animate-pulse"
+              />
+            </div>
+            <div className="space-y-2">
+              <p className="text-lg font-bold uppercase tracking-[0.2em] text-txt-main">
+                No Matches Found
+              </p>
+              <p className="text-[10px] font-medium uppercase tracking-[0.5em] text-txt-muted">
+                The archive returned null
+              </p>
+            </div>
           </div>
         )}
       </main>

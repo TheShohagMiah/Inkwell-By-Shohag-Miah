@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import CommentSection from "../components/CommentSection";
-
+import { Helmet } from "react-helmet-async";
 const BlogDetails = () => {
   const { id } = useParams();
   const [isLiked, setIsLiked] = useState(false);
@@ -50,6 +50,11 @@ const BlogDetails = () => {
 
   return (
     <div className="min-h-screen bg-main transition-colors duration-500 pb-24">
+      <Helmet>
+        {/* I have to dynamic this part */}
+        <title>The Architecture of Digital Soul | InkWell</title>
+      </Helmet>
+
       {/* READING PROGRESS BAR - Monochromatic & Thin */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-[3px] bg-txt-main z-[200] origin-left"

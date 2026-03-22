@@ -1,59 +1,100 @@
 /* src/index.css */
-
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
-@import "tailwindcss";@import "tailwindcss";
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
 
 @theme {
-  /* --- 1. PRIMARY BRAND COLORS --- */
-  --color-brand-primary: #4f46e5;
-  --color-brand-primary-hover: #4338ca;
+  /* --- 1. CORE BRAND COLORS --- */
+  --color-brand-primary: #8F43FC; 
+  --color-brand-primary-soft: rgba(89, 81, 214, 0.1);
   --color-brand-accent: #818cf8;
 
-  /* --- 2. SEMANTIC SURFACE COLORS --- */
-  --color-main: #ffffff;
-  --color-soft: #f8fafc;
-  --color-card: #ffffff;
+  /* --- 2. THE SUBTLE BORDER SYSTEM --- */
+  /* We use opacity so the border "absorbs" the background color */
+  --color-border-base: rgba(148, 163, 184, 0.12); /* Hairline outer border */
+  --color-border-soft: rgba(148, 163, 184, 0.06); /* Ghost border for dividers */
 
-  /* --- 3. TEXT & BORDER --- */
-  --color-txt-main: #0f172a;
-  --color-txt-muted: #64748b;
-  --color-border-base: #e2e8f0;
-  --color-border-soft: #f1f5f9;
+  /* --- 3. NEUTRALS --- */
+  --color-main: #f8fafc;        /* Dashboard Canvas */
+  --color-card: #ffffff;      /* Pure White Cards */
+  --color-soft: #f1f5f9;      /* Secondary surfaces */
 
-  /* --- 4. ANIMATION SPEEDS --- */
-  --animate-spin-slow: spin 3s linear infinite;
+  /* --- 4. TEXT --- */
+  --color-txt-main: #1e293b;    /* Slate 800 */
+  --color-txt-muted: #64748b;   /* Slate 500 */
+  
+  /* --- 5. SEMANTIC --- */
+  --color-success: #10b981;
+  --color-danger: #f43f5e;
+
+  /* --- 6. SHADOWS & RADIUS --- */
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  --radius-dashboard: 1.25rem;
 }
 
-/* --- DARK MODE OVERRIDES (Native CSS Logic) --- */
-@variant dark (&:where(.dark, .dark *)) ;
+/* --- DARK MODE REFINEMENT --- */
+@variant dark (&:where(.dark, .dark *));
 
 .dark {
-  --color-main: #050505;
-  --color-soft: #0a0a0a;
-  --color-card: #0f0f0f;
-
+  --color-main: #0f172a;
+  --color-card: #1e293b;
+  --color-soft: #334155;
   --color-txt-main: #f8fafc;
   --color-txt-muted: #94a3b8;
-
-  --color-border-base: rgba(255, 255, 255, 0.08);
-  --color-border-soft: rgba(255, 255, 255, 0.04);
+  /* Dark mode borders need to be even more transparent to avoid "glowing" lines */
+  --color-border-base: rgba(255, 255, 255, 0.05);
+  --color-border-soft: rgba(255, 255, 255, 0.03);
 }
 
-/* --- BASE ELEMENT STYLES --- */
+/* --- BASE STYLES --- */
 @layer base {
   body {
-    @apply bg-main text-txt-main transition-colors duration-300;
-    font-feature-settings: "cv02", "cv03", "cv04", "pnum" on, "lnum" on;font-family: "Raleway", sans-serif;
+    @apply bg-main text-txt-main antialiased transition-colors duration-300;
+    font-family: 'Raleway', sans-serif;
   }
 
-  /* Industry-level scrollbar */
-  ::-webkit-scrollbar {
-    @apply w-2;
+  h1, h2, h3 {
+    @apply tracking-tight font-semibold;
   }
-  ::-webkit-scrollbar-track {
-    @apply bg-main;
+}
+
+/* --- COMPONENT UTILITIES --- */
+@layer components {
+  /* High-end Dashboard Card */
+  .dash-card {
+    @apply bg-card border border-border-base rounded-[24px] p-6 shadow-sm transition-all;
+    @apply hover:border-border-base/80 hover:shadow-md;
   }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-border-base rounded-full hover:bg-brand-primary transition-colors;
+
+  /* Trend Badges */
+  .trend-badge-up {
+    @apply px-2.5 py-0.5 rounded-full bg-success/10 text-success text-[10px] font-bold inline-flex items-center gap-1;
+  }
+
+  .trend-badge-down {
+    @apply px-2.5 py-0.5 rounded-full bg-danger/10 text-danger text-[10px] font-bold inline-flex items-center gap-1;
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-200 dark:bg-slate-700 rounded-full hover:bg-brand-primary/30 transition-colors;
+  }
+}
+
+/* --- FUNCTIONAL UTILITIES --- */
+@layer utilities {
+  .glass-effect {
+    @apply bg-white/70 dark:bg-card/70 backdrop-blur-md;
+  }
+  
+  .flex-center {
+    @apply flex items-center justify-center;
   }
 }
