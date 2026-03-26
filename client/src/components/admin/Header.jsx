@@ -34,7 +34,7 @@ const Header = ({ setIsMobileOpen }) => {
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 
   return (
-    <header className="sticky top-0 z-40 h-16 lg:h-20 w-full border-b border-border-soft bg-white/70 dark:bg-card/70 backdrop-blur-md transition-all">
+    <header className="sticky top-0 z-40 h-16 lg:h-18 w-full border-b border-border-soft bg-card/70 backdrop-blur-xl supports-[backdrop-filter]:bg-card/60 transition-all">
       <div className="flex h-full items-center justify-between px-6 lg:px-10">
         {/* --- LEFT: SEARCH & MOBILE TOGGLE --- */}
         <div className="flex items-center gap-6 flex-1">
@@ -45,7 +45,7 @@ const Header = ({ setIsMobileOpen }) => {
             <Menu size={22} />
           </button>
 
-          <div className="relative group max-w-md w-full hidden md:block">
+          <div className="relative group max-w-md w-full hidden md:block border border-border-soft rounded-full">
             <Search
               size={16}
               className="absolute left-4 top-1/2 -translate-y-1/2 text-txt-muted group-focus-within:text-brand-primary transition-colors"
@@ -61,6 +61,22 @@ const Header = ({ setIsMobileOpen }) => {
                 K
               </span>
             </div>
+          </div>
+
+          <div className="liveSiteBtn  bg-soft px-3 py-1.5 rounded-full animation_btn">
+            <a
+              href="http://localhost:5173/"
+              target="_blank"
+              className="flex items-center gap-2"
+            >
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-700 opacity-80"></span>
+                <span class="relative inline-flex size-2 rounded-full bg-purple-700"></span>
+              </span>
+              <span className="text-xs font-semibold text-brand-primary ">
+                Live Site
+              </span>
+            </a>
           </div>
         </div>
 
@@ -145,7 +161,7 @@ const Header = ({ setIsMobileOpen }) => {
             </AnimatePresence>
           </div>
 
-          <div className="w-[1px] h-6 bg-border-soft mx-2" />
+          <div className="w-[1px] h-6 bg-soft" />
 
           {/* PROFILE DROPDOWN */}
           <div className="relative" ref={profileRef}>

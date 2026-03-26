@@ -4,22 +4,30 @@ import {
   Share2,
   Bookmark,
   Heart,
-  MessageCircle,
   ArrowLeft,
   Send,
   Link as LinkIcon,
-  LayoutTemplate,
+  Tag,
+  ArrowRight,
+  User,
+  SearchIcon,
+  Share2Icon,
+  Facebook,
+  TwitterIcon,
+  InstagramIcon,
 } from "lucide-react";
-import { motion, useScroll, useSpring } from "framer-motion";
-import CommentSection from "../components/CommentSection";
+import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet-async";
+import CommentSection from "../components/CommentSection";
+import RelatedEntities from "../components/ui/RelatedPosts";
+import { posts } from "../data/demoData";
+
 const BlogDetails = () => {
   const { id } = useParams();
   const [isLiked, setIsLiked] = useState(false);
   const [comment, setComment] = useState("");
   const [activeSection, setActiveSection] = useState("");
 
-  // 1. Reading Progress Logic
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -27,7 +35,6 @@ const BlogDetails = () => {
     restDelta: 0.001,
   });
 
-  // 2. Table of Contents Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -42,56 +49,59 @@ const BlogDetails = () => {
     return () => observer.disconnect();
   }, []);
 
-  const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    // Suggestion: Replace with a subtle custom toast
-    console.log("Link copied");
-  };
+  const tags = [
+    "Architecture",
+    "Modernism",
+    "Scale",
+    "Registry",
+    "Architecture",
+  ];
+
+  const relatedPosts = [
+    { id: "2", title: "The Geometry of Motion", cat: "Design" },
+    { id: "3", title: "Edge Computing Protocols", cat: "Engineering" },
+  ];
 
   return (
-    <div className="min-h-screen bg-main transition-colors duration-500 pb-24">
+    <div className="min-h-screen text-txt-main pb-24 transition-colors duration-500">
       <Helmet>
-        {/* I have to dynamic this part */}
-        <title>The Architecture of Digital Soul | InkWell</title>
+        <title>The Architecture of Digital Soul // INKWELL</title>
       </Helmet>
 
-      {/* READING PROGRESS BAR - Monochromatic & Thin */}
+      {/* PROGRESS FILAMENT */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-[3px] bg-txt-main z-[200] origin-left"
+        className="fixed top-0 left-0 right-0 h-[2px] bg-brand-primary z-[200] origin-left"
         style={{ scaleX }}
       />
 
-      {/* --- HERO HEADER --- */}
-      <header className="pt-24 pb-16 px-6">
-        <div className="max-w-4xl mx-auto space-y-8 text-center">
+      {/* --- HERO ARCHITECTURE --- */}
+      <header className="pb-10">
+        <div className="max-w-4xl mx-auto space-y-10 text-center">
           <Link
             to="/blogs"
-            className="group inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-txt-muted hover:text-txt-main transition-colors"
+            className="group inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.5em] text-txt-muted hover:text-brand-primary transition-colors"
           >
             <ArrowLeft
               size={14}
               className="group-hover:-translate-x-1 transition-transform"
             />
-            Library Index
+            Return to Index
           </Link>
 
-          <h1 className="text-5xl md:text-7xl font-semibold tracking-tighter text-txt-main leading-[0.95] uppercase">
+          <h1 className="text-3xl md:text-6xl font-bold tracking-tighter leading-[0.9] uppercase">
             The Architecture of <br />
-            <span className="font-light text-txt-muted decoration-border-base underline underline-offset-[12px] decoration-1">
+            <span className="font-light italic text-txt-muted/60 lowercase tracking-normal">
               Digital Soul
             </span>
           </h1>
 
-          <div className="flex items-center justify-center gap-4 pt-4">
-            <div className="flex items-center gap-4 bg-soft px-5 py-2.5 rounded-full border border-border-soft">
-              <div className="w-7 h-7 rounded-full bg-txt-main/10 border border-border-base flex items-center justify-center text-[9px] font-bold">
-                AR
-              </div>
-              <span className="text-[10px] font-bold text-txt-main uppercase tracking-widest">
+          <div className="flex items-center justify-center gap-4 pt-6">
+            <div className="flex items-center gap-5 bg-soft/70 px-6 py-3 rounded-full border border-border-soft backdrop-blur-sm">
+              <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-brand-primary">
                 Alex Rivera
               </span>
-              <div className="w-1 h-1 bg-border-base rounded-full" />
-              <span className="text-txt-muted text-[10px] uppercase font-semibold tracking-widest">
+              <div className="w-[1px] h-3 bg-border-soft" />
+              <span className="text-txt-muted text-[10px] uppercase font-medium tracking-[0.3em]">
                 March 20, 2026
               </span>
             </div>
@@ -99,168 +109,206 @@ const BlogDetails = () => {
         </div>
       </header>
 
-      {/* --- MAIN CONTENT LAYOUT --- */}
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 relative">
-        {/* LEFT SIDEBAR: Interaction */}
-        <aside className="hidden lg:block lg:col-span-1">
-          <div className="sticky top-40 flex flex-col items-center gap-8">
-            <button
-              onClick={() => setIsLiked(!isLiked)}
-              className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
-                isLiked
-                  ? "bg-txt-main text-main border-txt-main"
-                  : "border-border-soft text-txt-muted hover:border-txt-main hover:text-txt-main"
-              }`}
-            >
-              <Heart
-                size={18}
-                fill={isLiked ? "currentColor" : "none"}
-                strokeWidth={2}
-              />
-            </button>
-            <button className="p-3.5 rounded-xl border border-border-soft text-txt-muted hover:border-txt-main hover:text-txt-main transition-all cursor-pointer">
-              <Bookmark size={18} strokeWidth={2} />
-            </button>
-            <div className="h-16 w-[1px] bg-border-soft" />
-            <button
-              onClick={copyLink}
-              className="p-3.5 rounded-xl border border-border-soft text-txt-muted hover:border-txt-main transition-all cursor-pointer"
-            >
-              <LinkIcon size={18} strokeWidth={2} />
-            </button>
-          </div>
-        </aside>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 relative">
+        {/* LEFT: INTERACTION PROTOCOL */}
 
-        {/* CENTER: The Article */}
-        <main className="lg:col-span-7">
-          <div className="aspect-video rounded-3xl overflow-hidden mb-20 border border-border-soft bg-soft shadow-sm">
+        {/* CENTER: CORE NARRATIVE */}
+        <main className="lg:col-span-8">
+          <div className="aspect-video rounded-lg overflow-hidden mb-20 border border-border-soft bg-soft relative group">
             <img
               src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600"
-              className="w-full h-full object-cover grayscale opacity-90"
-              alt="Conceptual Design Architecture"
+              className="w-full h-full object-cover grayscale opacity-60 transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105"
+              alt="Conceptual Architecture"
             />
           </div>
 
           <article
-            className="prose prose-lg md:prose-xl prose-slate dark:prose-invert max-w-none 
-            prose-p:leading-[1.9] prose-p:text-txt-muted prose-p:font-light
-            prose-headings:tracking-tighter prose-headings:font-semibold prose-headings:text-txt-main prose-headings:uppercase"
+            className="prose prose-xl prose-slate dark:prose-invert max-w-none 
+            prose-p:text-lg prose-p:leading-relaxed prose-p:font-light prose-p:text-txt-muted prose-p:tracking-tight
+            prose-headings:font-medium prose-headings:tracking-tighter prose-headings:uppercase prose-headings:text-txt-main"
           >
-            <p className="text-2xl font-medium text-txt-main mb-12 leading-snug tracking-tight border-l-2 border-border-base pl-8 py-2">
+            <p className="text-2xl font-medium text-txt-main mb-16 leading-tight tracking-tighter border-l border-brand-primary/40 pl-10 py-2">
               Interfaces are no longer just tools; they are the membranes
-              through which we perceive reality.
+              through which we perceive digital reality.
             </p>
 
-            <h2 id="section-1" className="text-3xl mt-16 mb-6">
-              The Golden Ratio of UI
-            </h2>
+            <h2 id="section-1">The Golden Ratio of UI</h2>
             <p>
               When we talk about industry-level design, we are talking about the
               balance between utility and aesthetics. Modernism taught us that
-              form follows function, but in the digital age, form *is* function.
-              The way a shadow falls or a curve terminates informs the user's
-              trust in the system.
+              form follows function, but in the digital age, form{" "}
+              <strong>is</strong> function.
             </p>
 
-            <h2 id="section-2" className="text-3xl mt-16 mb-6">
-              Technical Implementation
-            </h2>
+            <h2 id="section-2">Technical Implementation</h2>
             <p>
               Scaling a platform like InkWell requires a robust architecture. By
-              leveraging edge computing, we ensure that the soul of the
-              application remains responsive, regardless of geographic distance.
+              leveraging edge computing, we ensure the soul of the application
+              remains responsive, regardless of geographic distance.
             </p>
           </article>
 
-          {/* --- RESPONSES SECTION --- */}
-          <section className="mt-40 pt-20 border-t border-border-soft">
+          {/* TAGS & SHARE */}
+          <div className="mt-24 pt-12 border-t border-border-soft flex flex-col lg:flex-row justify-between gap-8">
+            <div className="flex flex-wrap items-center uppercase gap-3">
+              {" "}
+              <span className="font-bold text-xs tracking-[0.3em]">Tags:</span>
+              {tags.slice(0, 4).map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-1.5 bg-soft border border-border-soft rounded-xl text-[8px] font-bold uppercase tracking-[0.3em] text-txt-muted hover:border-brand-primary/30 hover:bg-brand-primary hover:text-white transition-all cursor-pointer"
+                >
+                  #{tag}
+                </span>
+              ))}
+              <span className="text-sm font-medium uppercase text-txt-muted bg-soft rounded-2xl px-4 py-1.5">
+                +... {tags.length - 4}
+              </span>
+            </div>
+            <div className="flex items-center gap-3 text-[10px] ">
+              <span className="font-bold text-xs uppercase tracking-[0.4em] text-txt-main hover:opacity-70 transition-opacity">
+                Share:
+              </span>
+              <div className="w-8 h-8  flex items-center justify-center bg-soft hover:bg-brand-primary transition-all text-txt-muted cursor-pointer hover:text-white border border-border-soft rounded-2xl">
+                <Share2Icon size={14} />
+              </div>
+
+              <div className="w-8 h-8  flex items-center justify-center bg-soft hover:bg-brand-primary transition-all text-txt-muted cursor-pointer hover:text-white border border-border-soft rounded-2xl">
+                <TwitterIcon size={14} />
+              </div>
+              <div className="w-8 h-8  flex items-center justify-center bg-soft hover:bg-brand-primary transition-all text-txt-muted cursor-pointer hover:text-white border border-border-soft rounded-2xl">
+                <InstagramIcon size={14} />
+              </div>
+            </div>
+          </div>
+
+          {/* AUTHOR SIGNATURE */}
+          <section className="mt-15 p-5 md:p-10 bg-soft/50 border border-border-soft rounded-xl shadow-sm flex flex-col md:flex-row gap-10 items-center">
+            <div className="w-24 h-24 shrink-0 rounded-full bg-main border border-border-soft overflow-hidden relative group">
+              <div className="absolute inset-0 flex items-center justify-center text-txt-muted/20">
+                <User size={40} strokeWidth={1} />
+              </div>
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 border-brand-primary"
+                alt="Alex Rivera"
+              />
+            </div>
+            <div className="space-y-2 text-center md:text-left">
+              <h4 className="text-[10px] font-medium uppercase tracking-[0.5em] text-brand-primary">
+                Lead Architect
+              </h4>
+              <h3 className="text-3xl font-medium tracking-tighter uppercase text-txt-main">
+                Alex Rivera
+              </h3>
+              <p className="text-sm font-light text-txt-muted leading-relaxed max-w-md">
+                Exploring the intersection of structural engineering and digital
+                interface design. Alex oversees the InkWell Registry protocols.
+              </p>
+            </div>
+          </section>
+
+          <RelatedEntities posts={posts} />
+
+          {/* DISCUSSION PROTOCOL */}
+          <section className="mt-15">
             <div className="flex items-end justify-between mb-12">
-              <h3 className="text-3xl font-semibold text-txt-main uppercase tracking-tighter">
+              <h3 className="text-3xl font-medium text-txt-main uppercase tracking-tighter">
                 Discussion
               </h3>
-              <span className="text-[11px] font-bold text-txt-muted uppercase tracking-[0.3em] border-b border-border-base pb-1">
+              <span className="text-[10px] font-medium text-txt-muted uppercase tracking-[0.4em]">
                 12 Entries
               </span>
             </div>
-
-            <div className="relative bg-soft rounded-3xl border border-border-soft overflow-hidden transition-all duration-500 focus-within:border-txt-main/30">
-              <div className="flex items-center justify-between px-8 pt-8 pb-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-main border border-border-soft" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-txt-muted">
-                    Signatory: <span className="text-txt-main">Guest User</span>
-                  </span>
-                </div>
-              </div>
-
+            <div className="bg-soft/50 rounded-lg border border-border-soft overflow-hidden focus-within:border-brand-primary/30 transition-all">
               <textarea
-                rows="4"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Contribute to the dialogue..."
-                className="w-full bg-transparent px-8 py-6 text-lg outline-none resize-none text-txt-main placeholder:text-txt-muted/30 font-light leading-relaxed"
+                placeholder="Add to the registry..."
+                className="w-full bg-transparent p-10 text-lg outline-none resize-none text-txt-main placeholder:text-txt-muted/20 font-light"
+                rows="4"
               />
-
-              <div className="flex items-center justify-between px-8 py-6 bg-main/50 border-t border-border-soft">
-                <div className="flex items-center gap-4">
-                  <button className="text-[10px] font-bold uppercase tracking-widest text-txt-muted hover:text-txt-main transition-colors cursor-pointer">
-                    Clear
-                  </button>
-                  <button className="bg-txt-main text-main px-10 py-4 rounded-xl font-bold text-[10px] uppercase tracking-[0.25em] transition-all hover:opacity-90 active:scale-[0.98] flex items-center gap-3 cursor-pointer">
-                    Submit Contribution
-                    <Send size={14} strokeWidth={2.5} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-          <CommentSection />
-        </main>
-
-        {/* RIGHT SIDEBAR: Table of Contents */}
-        <aside className="hidden lg:block lg:col-span-4">
-          <div className="sticky top-40 space-y-12">
-            <div className="space-y-6">
-              <h4 className="text-[10px] font-bold uppercase tracking-[0.3em] text-txt-muted border-b border-border-soft pb-2 w-fit">
-                Index
-              </h4>
-              <nav className="flex flex-col gap-5">
-                {[
-                  { id: "section-1", label: "The Golden Ratio of UI" },
-                  { id: "section-2", label: "Technical Implementation" },
-                ].map((item) => (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    className={`text-[11px] uppercase tracking-widest font-bold transition-all duration-300 ${
-                      activeSection === item.id
-                        ? "text-txt-main translate-x-2"
-                        : "text-txt-muted hover:text-txt-main"
-                    }`}
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </nav>
-            </div>
-
-            <div className="p-10 bg-txt-main rounded-[2.5rem] text-main space-y-6">
-              <h4 className="text-xl font-semibold leading-tight tracking-tight uppercase">
-                InkWell <br /> Weekly
-              </h4>
-              <p className="text-main/70 text-[11px] leading-relaxed font-medium uppercase tracking-wider">
-                Curated insights on the future of design.
-              </p>
-              <div className="space-y-3 pt-2">
-                <input
-                  type="text"
-                  placeholder="EMAIL ADDRESS"
-                  className="w-full bg-main/10 border border-main/20 rounded-xl px-4 py-3 text-[10px] font-bold tracking-widest outline-none placeholder:text-main/30 text-main focus:border-main/50 transition-colors"
-                />
-                <button className="w-full bg-main text-txt-main font-bold py-3.5 rounded-xl text-[10px] uppercase tracking-[0.2em] hover:opacity-90 transition-opacity cursor-pointer">
-                  Subscribe
+              <div className="px-10 py-6 bg-main/50 border-t border-border-soft flex justify-end">
+                <button className="bg-txt-main text-main px-8 py-4 rounded-xl font-medium text-[9px] uppercase tracking-[0.4em] hover:bg-brand-primary hover:text-white transition-all flex items-center gap-3">
+                  Submit Entry <Send size={12} strokeWidth={2} />
                 </button>
               </div>
+            </div>
+            <CommentSection />
+          </section>
+        </main>
+
+        {/* RIGHT: REGISTRY INDEX */}
+        <aside className="lg:col-span-4">
+          <div className="sticky top-40 space-y-10">
+            {/* 1. SEARCH PROTOCOL */}
+            <div className="space-y-5 bg-card border border-card rounded-lg p-4 shadow-xl">
+              <h4 className="text-[9px] font-medium uppercase tracking-[0.5em] text-txt-muted border-b border-border-soft pb-4">
+                Search Registry
+              </h4>
+              <div className="relative group">
+                <input
+                  type="text"
+                  placeholder="QUERY DATABASE..."
+                  className="w-full bg-soft/50 border border-border-soft rounded-xl px-5 py-3 text-[10px] font-medium tracking-[0.2em] outline-none focus:border-brand-primary/40 focus:bg-soft transition-all placeholder:text-txt-muted/30"
+                />
+                <SearchIcon
+                  size={14}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-txt-muted opacity-40 group-focus-within:text-brand-primary transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* 3. PRIORITY ENTITIES (Top 5) */}
+            <div className="space-y-5 bg-card border border-card rounded-lg p-4 shadow-xl">
+              <h4 className="text-[9px] font-medium uppercase tracking-[0.5em] text-txt-muted border-b border-border-soft pb-4">
+                Priority Entities
+              </h4>
+              <div className="space-y-8">
+                {[
+                  { id: "1", title: "The Architecture of Soul", cat: "Core" },
+                  { id: "2", title: "Spatial Interfaces", cat: "Design" },
+                  { id: "3", title: "Latency Protocols", cat: "Eng" },
+                  { id: "4", title: "The Grid System", cat: "Layout" },
+                  { id: "5", title: "Type as Structure", cat: "Font" },
+                ].map((post, idx) => (
+                  <div
+                    key={post.id}
+                    className="group cursor-pointer flex gap-4"
+                  >
+                    <span className="text-[9px] font-medium text-txt-muted opacity-30 mt-1">
+                      0{idx + 1}
+                    </span>
+                    <div className="space-y-1">
+                      <p className="text-[7px] font-medium uppercase tracking-[0.4em] text-brand-primary/60">
+                        {post.cat}
+                      </p>
+                      <h5 className="text-sm font-medium tracking-tight uppercase text-txt-main group-hover:text-brand-primary transition-colors leading-tight">
+                        {post.title}
+                      </h5>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* 4. COMMUNICATION LINK (Get in Touch) */}
+            <div className="space-y-5 bg-card border border-card rounded-lg p-4 shadow-xl">
+              <h4 className="text-[10px] font-medium uppercase tracking-[0.4em] text-txt-main">
+                Liaison
+              </h4>
+              <p className="text-[11px] font-light text-txt-muted leading-relaxed tracking-tight">
+                Request a formal consultation or report a registry anomaly.
+              </p>
+              <button className="w-full group flex items-center justify-between bg-main border border-border-soft hover:border-brand-primary/40 px-5 py-3.5 rounded-xl transition-all cursor-pointer">
+                <span className="text-[9px] font-medium uppercase tracking-[0.3em] text-txt-main">
+                  Get in Touch
+                </span>
+                <ArrowRight
+                  size={14}
+                  className="text-brand-primary -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all"
+                />
+              </button>
             </div>
           </div>
         </aside>

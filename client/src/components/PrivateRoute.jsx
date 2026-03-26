@@ -16,15 +16,12 @@ const useAuth = () => {
       role: user?.role || "user",
     };
   } catch (error) {
-    console.error("Auth_Sync_Error:", error);
     // If it's a raw string (token), we treat it as authenticated but guest
     return { isAuthenticated: true, role: "user" };
   }
 };
 const PrivateRoute = ({ children, adminOnly = false }) => {
   const { isAuthenticated, role } = useAuth();
-
-  console.log("Auth_Check:", { isAuthenticated, role, adminOnly });
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

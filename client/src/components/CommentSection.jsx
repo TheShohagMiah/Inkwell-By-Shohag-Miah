@@ -11,7 +11,6 @@ import { motion, AnimatePresence } from "framer-motion";
 const CommentSection = () => {
   const [replyTarget, setReplyTarget] = useState(null);
   const [replyText, setReplyText] = useState("");
-
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -168,7 +167,7 @@ const CommentSection = () => {
                     <CornerDownRight size={24} strokeWidth={2} />
                   </div>
 
-                  <div className="bg-main border-2 border-txt-main/10 shadow-2xl overflow-hidden focus-within:border-txt-main/40 transition-all">
+                  <div className="bg-main border border-brand-primary shadow-2xl rounded-lg overflow-hidden focus-within:border-txt-main/40 transition-all">
                     <textarea
                       autoFocus
                       value={replyText}

@@ -1,70 +1,21 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { Sparkles, LayoutGrid, StretchHorizontal, Hash } from "lucide-react";
+import {
+  Sparkles,
+  LayoutGrid,
+  StretchHorizontal,
+  Hash,
+  ArrowUpRight,
+  Database,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PostCard from "../components/PostCard";
+import TrendingSection from "../components/TrendingSection";
+import Newsletter from "../components/NewsLetter";
+import { posts } from "../data/demoData";
 
 const categories = ["The Archive", "Engineering", "Design", "Culture"];
-
-// Standardized Mock Data
-const posts = [
-  {
-    id: 1,
-    title: "The Minimalism of Digital Architecture",
-    excerpt:
-      "Exploring how negative space defines modern user experiences in high-end software.",
-    category: "Design",
-    date: "Mar 12, 2026",
-    readTime: "5 min",
-    image:
-      "https://images.unsplash.com/photo-1509395062183-67c5ad6faff9?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "System Status: Spring 2026 Update",
-    excerpt:
-      "Infrastructure migration notes and the transition to edge-based computing nodes.",
-    category: "Culture",
-    date: "Feb 28, 2026",
-    readTime: "8 min",
-    image:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "Optimizing React with Framer Motion",
-    excerpt:
-      "A deep dive into 60fps animations and layout projections for complex dashboards.",
-    category: "Engineering",
-    date: "Mar 08, 2026",
-    readTime: "12 min",
-    image:
-      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: 4,
-    title: "Next-Gen State Management",
-    excerpt:
-      "Moving beyond Redux: Why signals and atomic state are winning the performance war.",
-    category: "Engineering",
-    date: "Mar 05, 2026",
-    readTime: "10 min",
-    image:
-      "https://images.unsplash.com/photo-1618477388954-7852f32655ec?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    id: 5,
-    title: "The Psychology of Dark Mode",
-    excerpt:
-      "Analyzing user retention and eye strain metrics in immersive SaaS environments.",
-    category: "Design",
-    date: "Mar 01, 2026",
-    readTime: "7 min",
-    image:
-      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop",
-  },
-];
 
 const Home = () => {
   const navigate = useNavigate();
@@ -84,101 +35,133 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-main pb-24 transition-colors">
+    <div className="min-h-screen transition-colors duration-500">
       <Helmet>
-        <title>Flux // Showcase Portfolio</title>
+        <title>InkWell // Digital Registry</title>
         <meta
           name="description"
           content="A curated collection of digital architecture and engineering perspectives."
         />
       </Helmet>
 
-      {/* --- 1. HERO --- */}
-      <section className="max-w-7xl mx-auto px-6 pt-10 grid grid-cols-1 md:grid-cols-12 gap-8">
+      {/* --- 01. HERO ARCHITECTURE --- */}
+      <section className="max-w-7xl mx-auto px-6 md:px-8 pt-6 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10">
+        {/* Main Feature Slot */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="md:col-span-8 relative group aspect-[16/9] md:aspect-auto md:h-[580px] overflow-hidden rounded-3xl bg-soft border border-border-soft cursor-pointer shadow-sm"
-          onClick={() => navigate(`/blogs/${featuredPost.id}`)}
+          className="lg:col-span-8 relative group aspect-[4/5] sm:aspect-[16/10] lg:aspect-auto lg:h-[650px] overflow-hidden rounded-[2.5rem] md:rounded-[3.5rem] bg-soft border border-border-soft cursor-pointer shadow-sm"
+          onClick={() => navigate(`/posts/${featuredPost.id}`)}
         >
           <img
             src={featuredPost.image}
-            className="absolute inset-0 w-full h-full object-cover opacity-80 transition-transform duration-1000 group-hover:scale-[1.03]"
+            className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 transition-all duration-[1.5s] group-hover:scale-105 group-hover:grayscale-0"
             alt="Feature"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-          <div className="absolute bottom-0 left-0 p-10 md:p-16 space-y-4 z-10">
-            <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[8px] font-bold uppercase tracking-[0.2em] text-white">
-              Principal Feature
-            </span>
-            <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight max-w-2xl tracking-tighter uppercase">
+          <div className="absolute inset-0 bg-gradient-to-t from-main/90 via-main/20 to-transparent" />
+
+          <div className="absolute bottom-0 left-0 p-8 md:p-16 lg:p-20 space-y-6 z-10">
+            <div className="flex items-center gap-3">
+              <span className="px-4 py-1.5 bg-brand-primary/10 backdrop-blur-md border border-brand-primary/20 rounded-full text-[9px] font-medium uppercase tracking-[0.4em] text-brand-primary">
+                Principal Dispatch // 2026
+              </span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-medium text-txt-main leading-[1.05] max-w-2xl tracking-tighter uppercase">
               {featuredPost.title}
             </h1>
           </div>
         </motion.div>
 
-        <div className="md:col-span-4 grid grid-rows-2 gap-8">
-          <div className="bg-txt-main rounded-3xl p-10 flex flex-col justify-between text-main group cursor-pointer hover:bg-txt-main/90 transition-all shadow-xl">
-            <Sparkles size={28} strokeWidth={2} />
-            <div className="space-y-2">
-              <h3 className="text-2xl font-bold tracking-tight uppercase">
-                Submit perspective.
+        {/* Action & Metric Slots */}
+        <div className="lg:col-span-4 flex flex-col gap-8 md:gap-10">
+          {/* Perspective Submission */}
+          <div className="bg-txt-main rounded-[2.5rem] md:rounded-[3.5rem] p-10 md:p-12 flex flex-col justify-between text-main group cursor-pointer hover:opacity-95 transition-all shadow-2xl min-h-[280px] lg:h-1/2">
+            <div className="flex justify-between items-start">
+              <Sparkles
+                size={32}
+                strokeWidth={1.2}
+                className="group-hover:rotate-12 transition-transform duration-500"
+              />
+              <div className="p-2 border border-main/20 rounded-full">
+                <ArrowUpRight size={18} strokeWidth={1.5} />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-3xl md:text-4xl font-medium tracking-tighter uppercase leading-[0.9]">
+                Submit <br /> perspective.
               </h3>
-              <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">
-                Join the collective →
+              <p className="text-[10px] font-medium uppercase tracking-[0.3em] opacity-60">
+                Authorized Contributor Access
               </p>
             </div>
           </div>
 
-          <div className="bg-soft border border-border-soft rounded-3xl p-10 flex flex-col justify-end space-y-6">
+          {/* Metric Node */}
+          <div className="bg-soft/40 border border-border-soft rounded-[2.5rem] md:rounded-[3.5rem] p-10 md:p-12 flex flex-col justify-end space-y-8 min-h-[280px] lg:h-1/2 relative overflow-hidden">
+            <Database
+              size={100}
+              className="absolute -top-6 -right-6 opacity-[0.03] text-txt-main"
+              strokeWidth={1}
+            />
             <div>
-              <p className="text-3xl font-black text-txt-main tracking-tighter">
+              <p className="text-5xl md:text-6xl font-medium text-txt-main tracking-tighter">
                 12.4K
               </p>
-              <p className="text-[9px] font-bold text-txt-muted uppercase tracking-[0.2em]">
-                Active Readers
+              <p className="text-[10px] font-medium text-txt-muted uppercase tracking-[0.5em] mt-3 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-brand-primary animate-pulse" />
+                Active Nodes
               </p>
             </div>
-            <div className="w-full h-px bg-border-soft" />
-            <p className="text-[10px] font-medium text-txt-muted uppercase tracking-widest">
-              Curated by the{" "}
-              <span className="text-txt-main font-bold italic underline decoration-border-soft">
-                InkWell Team
+            <div className="w-full h-[1px] bg-border-soft opacity-50" />
+            <p className="text-[11px] font-medium text-txt-muted uppercase tracking-[0.2em] leading-relaxed">
+              Maintained by the <br />
+              <span className="text-txt-main font-medium border-b border-brand-primary/30">
+                InkWell Global Registry
               </span>
             </p>
           </div>
         </div>
       </section>
 
-      {/* --- 2. FILTERS (STYLIZED) --- */}
-      <section className="max-w-7xl mx-auto px-6 mt-24 flex items-center justify-between border-b border-border-soft sticky top-0 bg-main/80 backdrop-blur-xl z-30">
-        <div className="flex items-center gap-8 pb-4">
+      {/* --- 02. SYSTEM FILTERS --- */}
+      <section className="max-w-7xl mx-auto px-6 md:px-8 mt-24 md:mt-40 flex flex-col md:flex-row items-start md:items-center justify-between border-b border-border-soft pb-8 gap-6 md:gap-0">
+        <div className="flex flex-wrap items-center gap-6 md:gap-12">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveFilter(cat)}
-              className={`whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.2em] transition-all cursor-pointer relative pb-4 -mb-[18px] ${
+              className={`text-[10px] font-medium uppercase tracking-[0.4em] transition-all relative py-2 ${
                 activeFilter === cat
-                  ? "text-txt-main border-b-2 border-txt-main scale-105"
+                  ? "text-brand-primary"
                   : "text-txt-muted hover:text-txt-main"
               }`}
             >
               {cat}
+              {activeFilter === cat && (
+                <motion.div
+                  layoutId="activeFilter"
+                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-primary"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center gap-1.5 bg-soft p-1 rounded-xl mb-4 shrink-0 border border-border-soft">
+        <div className="flex items-center gap-2 bg-soft/50 p-1.5 rounded-2xl border border-border-soft self-end md:self-auto">
           {[
-            { id: "grid", icon: <LayoutGrid size={14} /> },
-            { id: "list", icon: <StretchHorizontal size={14} /> },
+            { id: "grid", icon: <LayoutGrid size={14} strokeWidth={1.5} /> },
+            {
+              id: "list",
+              icon: <StretchHorizontal size={14} strokeWidth={1.5} />,
+            },
           ].map((mode) => (
             <button
               key={mode.id}
               onClick={() => setViewMode(mode.id)}
-              className={`p-2 rounded-lg transition-all cursor-pointer ${
+              className={`p-2.5 rounded-xl transition-all ${
                 viewMode === mode.id
-                  ? "bg-main text-txt-main shadow-md ring-1 ring-border-soft"
+                  ? "bg-main text-brand-primary shadow-sm border border-border-soft"
                   : "text-txt-muted/40 hover:text-txt-muted"
               }`}
             >
@@ -188,14 +171,14 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 3. FEED --- */}
-      <section className="max-w-7xl mx-auto px-6 mt-20">
+      {/* --- 03. ENTRIES FEED --- */}
+      <section className="max-w-7xl mx-auto px-6 md:px-8 mt-10">
         <motion.div
           layout
           className={
             viewMode === "grid"
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24"
-              : "flex flex-col gap-16"
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-15"
+              : "flex flex-col gap-8"
           }
         >
           <AnimatePresence mode="popLayout">
@@ -206,16 +189,26 @@ const Home = () => {
         </motion.div>
 
         {filteredPosts.length === 0 && (
-          <div className="py-40 text-center flex flex-col items-center">
-            <div className="p-6 rounded-full bg-soft border border-border-soft mb-6">
-              <Hash className="text-txt-muted animate-pulse" size={32} />
+          <div className="py-48 text-center flex flex-col items-center">
+            <div className="p-10 rounded-full bg-soft border border-border-soft mb-8">
+              <Hash
+                className="text-brand-primary opacity-20"
+                size={40}
+                strokeWidth={1}
+              />
             </div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.5em] text-txt-muted">
-              Null result // No entries found.
+            <p className="text-[11px] font-medium uppercase tracking-[0.6em] text-txt-muted opacity-50">
+              Null result // Archive Ledger Empty
             </p>
           </div>
         )}
       </section>
+
+      <div className="mt-40">
+        <TrendingSection posts={posts} />
+      </div>
+
+      <Newsletter />
     </div>
   );
 };

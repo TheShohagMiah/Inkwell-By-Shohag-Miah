@@ -9,7 +9,7 @@ const AdminLayout = () => {
 
   return (
     // 1. Full height container, no overflow here
-    <div className="flex h-screen bg-main overflow-hidden">
+    <div className="flex h-screen  overflow-hidden">
       {/* 2. SIDEBAR: Fixed via 'h-screen' and 'sticky' or 'fixed' inside the component */}
       <Sidebar
         isCollapsed={isCollapsed}

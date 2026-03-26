@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   Search,
@@ -12,11 +12,13 @@ import {
   Menu,
   X,
   LayoutDashboard,
+  ShieldCheck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { label: "Feed", link: "/" },
+  { label: "About", link: "/about" },
   {
     label: "Archive",
     link: "/blogs",
@@ -39,8 +41,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- STATE ---
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Mock auth state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -48,9 +49,6 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  // --- EFFECTS ---
-
-  // 1. Theme Initialization & Persistence
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "dark";
     if (savedTheme === "dark") {
@@ -62,7 +60,6 @@ const Navbar = () => {
     }
   }, []);
 
-  // 2. Search Shortcut (Cmd/Ctrl + K)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
@@ -75,7 +72,7 @@ const Navbar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // 3. Navigation Cleanup
+  // Auto-close on route change or resize
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsSearchOpen(false);
@@ -83,7 +80,6 @@ const Navbar = () => {
     setShowProfileMenu(false);
   }, [location]);
 
-  // --- HANDLERS ---
   const toggleTheme = () => {
     const newTheme = isDarkMode ? "light" : "dark";
     document.documentElement.classList.toggle("dark");
@@ -101,22 +97,26 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="w-full bg-main/80 backdrop-blur-md border-b border-border-soft z-[100] sticky top-0 h-16 flex items-center transition-colors">
-        <div className="max-w-7xl mx-auto w-full px-6 flex justify-between items-center">
-          <div className="flex items-center gap-6 lg:gap-10">
+      <nav className="w-full bg-main/50 backdrop-blur-2xl border-b border-border-soft z-[100] sticky top-0 h-20 flex items-center transition-all duration-500">
+        <div className="max-w-7xl mx-auto w-full px-6 md:px-8 flex justify-between items-center">
+          <div className="flex items-center gap-10 lg:gap-14">
             {/* LOGO */}
             <div
               onClick={() => navigate("/")}
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className="flex items-center gap-3 cursor-pointer group"
             >
-              <Feather className="text-txt-main" size={18} strokeWidth={2.5} />
-              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-txt-main">
+              <Feather
+                className="text-brand-primary"
+                size={20}
+                strokeWidth={1.5}
+              />
+              <span className="text-[12px] font-medium uppercase tracking-[0.5em] text-txt-main hidden xs:block">
                 InkWell
               </span>
             </div>
 
             {/* DESKTOP NAV */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-2">
               {navLinks.map((link, i) => (
                 <div
                   key={i}
@@ -127,9 +127,9 @@ const Navbar = () => {
                   <NavLink
                     to={link.link}
                     className={({ isActive }) =>
-                      `px-4 py-1 text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-1 ${
+                      `px-4 py-2 text-[10px] font-medium uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${
                         isActive
-                          ? "text-txt-main bg-soft rounded-lg"
+                          ? "text-white bg-brand-primary rounded-lg"
                           : "text-txt-muted hover:text-txt-main"
                       }`
                     }
@@ -138,11 +138,7 @@ const Navbar = () => {
                     {link.dropdown && (
                       <ChevronDown
                         size={10}
-                        className={
-                          openDropdown === link.label
-                            ? "rotate-180 transition-transform"
-                            : "transition-transform"
-                        }
+                        className={`transition-transform ${openDropdown === link.label ? "rotate-180" : ""}`}
                       />
                     )}
                   </NavLink>
@@ -150,16 +146,16 @@ const Navbar = () => {
                   <AnimatePresence>
                     {link.dropdown && openDropdown === link.label && (
                       <motion.div
-                        initial={{ opacity: 0, y: 5 }}
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 5 }}
-                        className="absolute left-0 mt-1 w-44 bg-main border border-border-base rounded-2xl shadow-2xl py-2 z-[110]"
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute left-0 mt-2 w-52 bg-card border border-border-soft rounded-2xl shadow-3xl py-3 overflow-hidden"
                       >
                         {link.dropdown.map((sub, j) => (
                           <NavLink
                             key={j}
                             to={sub.link}
-                            className="block px-5 py-3 text-[9px] font-bold uppercase tracking-widest text-txt-muted hover:text-txt-main hover:bg-soft transition-colors"
+                            className="block px-6 py-3 text-[9px] font-medium uppercase tracking-[0.3em] text-txt-muted hover:text-brand-primary hover:bg-soft/50 transition-colors"
                           >
                             {sub.label}
                           </NavLink>
@@ -172,93 +168,82 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
-            {/* SEARCH TRIGGER */}
+          <div className="flex items-center gap-3 md:gap-6">
+            {/* SYSTEM SEARCH */}
             <div
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-3 bg-soft/50 border border-border-soft px-3 md:px-4 py-1.5 rounded-xl cursor-pointer hover:border-border-base transition-all"
+              className="flex items-center gap-3 bg-soft/40 border border-border-soft px-3 md:px-4 py-2 rounded-full cursor-pointer hover:bg-soft/80 transition-all group"
             >
-              <Search size={14} className="text-txt-muted" strokeWidth={2.5} />
-              <span className="hidden md:inline text-[10px] text-txt-muted font-bold uppercase tracking-widest">
+              <Search
+                size={14}
+                className="text-txt-muted group-hover:text-txt-main"
+              />
+              <span className="hidden sm:inline text-[9px] text-txt-muted font-medium uppercase tracking-[0.2em]">
                 Search
               </span>
-              <div className="hidden lg:flex items-center gap-1 border-l border-border-soft pl-3 ml-1">
-                <Command size={10} className="text-txt-muted/60" />
-                <span className="text-[9px] font-bold text-txt-muted/60">
-                  K
-                </span>
+              <div className="hidden xl:flex items-center gap-1 opacity-20">
+                <Command size={10} />
+                <span className="text-[9px] font-medium">K</span>
               </div>
             </div>
 
             <button
               onClick={toggleTheme}
-              className="p-2 text-txt-muted hover:text-txt-main transition-colors"
+              className="text-txt-muted hover:text-txt-main p-1"
             >
               {isDarkMode ? (
-                <Sun size={16} strokeWidth={2.5} />
+                <Sun size={18} strokeWidth={1.5} />
               ) : (
-                <Moon size={16} strokeWidth={2.5} />
+                <Moon size={18} strokeWidth={1.5} />
               )}
             </button>
 
-            {/* PROFILE / AUTH SECTION */}
-            <div className="hidden md:flex items-center">
+            {/* AUTH / PROFILE */}
+            <div className="hidden sm:flex items-center border-l border-border-soft pl-6">
               {!isAuthenticated ? (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => navigate("/login")}
-                    className="text-txt-muted text-[10px] font-bold uppercase tracking-widest px-4 py-2 hover:text-txt-main"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => navigate("/register")}
-                    className="bg-txt-main text-main text-[10px] font-bold uppercase tracking-[0.2em] px-5 py-2 rounded-xl active:scale-95"
-                  >
-                    Sign Up
-                  </button>
-                </div>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-txt-main text-main text-[9px] font-medium uppercase tracking-[0.3em] px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity"
+                >
+                  sign in
+                </button>
               ) : (
                 <div className="relative">
                   <button
                     onClick={() => setShowProfileMenu(!showProfileMenu)}
-                    className="w-8 h-8 rounded-lg bg-txt-main text-main text-[10px] font-bold flex items-center justify-center border border-border-base hover:opacity-90 transition-all"
+                    className="w-9 h-9 rounded-xl bg-soft border border-border-soft flex items-center justify-center text-[11px] font-medium text-txt-main hover:border-brand-primary transition-all"
                   >
-                    A
+                    AR
                   </button>
                   <AnimatePresence>
                     {showProfileMenu && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute right-0 mt-3 w-48 bg-main border border-border-base rounded-2xl shadow-2xl py-2 z-[110] overflow-hidden"
+                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                        className="absolute right-0 mt-4 w-60 bg-card border border-border-soft rounded-[2rem] shadow-3xl py-4 overflow-hidden"
                       >
-                        <div className="px-5 py-3 border-b border-border-soft mb-1">
-                          <p className="text-[9px] font-bold text-txt-muted uppercase tracking-tighter">
-                            Signed in as
+                        <div className="px-6 py-4 border-b border-border-soft mb-2">
+                          <p className="text-[8px] font-medium text-txt-muted uppercase tracking-[0.4em] mb-1">
+                            Authenticated Node
                           </p>
-                          <p className="text-[10px] font-bold text-txt-main truncate">
-                            alex@inkwell.com
+                          <p className="text-[12px] font-medium text-txt-main tracking-tight uppercase">
+                            Alex Rivera
                           </p>
                         </div>
                         <button
-                          onClick={() => navigate("/dashboard")}
-                          className="w-full flex items-center gap-3 px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-txt-muted hover:text-txt-main hover:bg-soft"
+                          onClick={() => navigate("/admin/dashboard")}
+                          className="w-full flex items-center gap-4 px-6 py-3 text-[10px] font-medium uppercase tracking-widest text-txt-muted hover:text-txt-main hover:bg-soft transition-colors"
                         >
-                          <LayoutDashboard size={14} /> Dashboard
-                        </button>
-                        <button
-                          onClick={() => navigate("/profile")}
-                          className="w-full flex items-center gap-3 px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-txt-muted hover:text-txt-main hover:bg-soft"
-                        >
-                          <User size={14} /> Profile
+                          <LayoutDashboard size={14} strokeWidth={1.5} />{" "}
+                          Dashboard
                         </button>
                         <button
                           onClick={() => setIsAuthenticated(false)}
-                          className="w-full flex items-center gap-3 px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-red-500 hover:bg-red-500/5 border-t border-border-soft"
+                          className="w-full flex items-center gap-4 px-6 py-3 text-[10px] font-medium uppercase tracking-widest text-red-400 hover:bg-red-400/5 mt-2 border-t border-border-soft"
                         >
-                          <LogOut size={14} /> Sign Out
+                          <LogOut size={14} strokeWidth={1.5} /> Terminate
+                          Session
                         </button>
                       </motion.div>
                     )}
@@ -267,164 +252,168 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* MOBILE MENU TOGGLE */}
+            {/* MOBILE MENU TRIGGER */}
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-txt-main bg-soft rounded-lg transition-all active:scale-90"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden p-2 text-txt-main bg-soft rounded-lg border border-border-soft"
             >
-              {isMobileMenuOpen ? (
-                <X size={18} strokeWidth={2.5} />
-              ) : (
-                <Menu size={18} strokeWidth={2.5} />
-              )}
+              <Menu size={20} />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* MOBILE DRAWER MENU */}
+      {/* --- MOBILE SIDEBAR --- */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[90] bg-main pt-24 px-8 md:hidden overflow-y-auto"
-          >
-            <div className="flex flex-col gap-6">
-              {navLinks.map((link, i) => (
-                <div key={i} className="border-b border-border-soft pb-4">
-                  <div
-                    className="flex items-center justify-between text-[13px] font-bold uppercase tracking-[0.2em] text-txt-main mb-2"
-                    onClick={() =>
-                      link.dropdown
-                        ? setOpenDropdown(
-                            openDropdown === link.label ? null : link.label,
-                          )
-                        : navigate(link.link)
-                    }
-                  >
-                    {link.label}
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-main/90 backdrop-blur-md z-[150]"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 bottom-0 w-[85%] max-w-sm bg-card border-l border-border-soft z-[160] p-8 flex flex-col"
+            >
+              <div className="flex justify-between items-center mb-12">
+                <span className="text-[10px] font-medium uppercase tracking-[0.5em] text-txt-muted opacity-50">
+                  System Menu
+                </span>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 bg-soft rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="flex-1 space-y-8">
+                {navLinks.map((link, i) => (
+                  <div key={i} className="space-y-4">
+                    <NavLink
+                      to={link.link}
+                      className="text-lg font-medium uppercase tracking-[0.2em] text-txt-main block"
+                    >
+                      {link.label}
+                    </NavLink>
                     {link.dropdown && (
-                      <ChevronDown
-                        size={16}
-                        className={
-                          openDropdown === link.label ? "rotate-180" : ""
-                        }
-                      />
+                      <div className="pl-4 space-y-3 border-l border-border-soft">
+                        {link.dropdown.map((sub, j) => (
+                          <NavLink
+                            key={j}
+                            to={sub.link}
+                            className="text-[11px] font-medium uppercase tracking-widest text-txt-muted block hover:text-brand-primary"
+                          >
+                            {sub.label}
+                          </NavLink>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {link.dropdown && openDropdown === link.label && (
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: "auto" }}
-                      className="flex flex-col gap-4 mt-4 ml-4 overflow-hidden"
-                    >
-                      {link.dropdown.map((sub, j) => (
-                        <NavLink
-                          key={j}
-                          to={sub.link}
-                          className="text-[10px] font-bold uppercase tracking-widest text-txt-muted"
-                        >
-                          {sub.label}
-                        </NavLink>
-                      ))}
-                    </motion.div>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
 
-              {isAuthenticated && (
-                <NavLink
-                  to="/admin/dashboard"
-                  className="text-[13px] font-bold uppercase tracking-[0.2em] text-txt-main border-b border-border-soft pb-4"
-                >
-                  Dashboard
-                </NavLink>
-              )}
-
-              <div className="flex flex-col gap-3 mt-4">
+              <div className="pt-8 border-t border-border-soft space-y-4">
                 {!isAuthenticated ? (
-                  <>
-                    <button
-                      onClick={() => navigate("/login")}
-                      className="w-full border border-border-soft text-txt-main py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em]"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={() => navigate("/register")}
-                      className="w-full bg-txt-main text-main py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em]"
-                    >
-                      Sign Up
-                    </button>
-                  </>
-                ) : (
                   <button
-                    onClick={() => setIsAuthenticated(false)}
-                    className="w-full bg-soft text-red-500 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em]"
+                    onClick={() => navigate("/login")}
+                    className="w-full py-4 bg-txt-main text-main text-[10px] font-medium uppercase tracking-[0.3em] rounded-2xl"
                   >
-                    Sign Out
+                    Sign in
                   </button>
+                ) : (
+                  <div className="flex items-center gap-4 p-4 bg-soft rounded-2xl">
+                    <div className="w-10 h-10 rounded-xl bg-card border border-border-soft flex items-center justify-center text-xs font-medium">
+                      AR
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[11px] font-medium uppercase tracking-wider">
+                        Alex Rivera
+                      </p>
+                      <p className="text-[9px] text-txt-muted uppercase tracking-widest">
+                        Active Dispatcher
+                      </p>
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
-      {/* SEARCH COMMAND PALETTE MODAL */}
+      {/* --- SEARCH MODAL (Shared with previous logic) --- */}
       <AnimatePresence>
         {isSearchOpen && (
-          <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[15vh] px-4">
+          <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[10vh] md:pt-[15vh] px-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsSearchOpen(false)}
-              className="absolute inset-0 bg-main/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-main/95 backdrop-blur-xl"
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              className="relative w-full max-w-xl bg-main border border-border-base shadow-2xl rounded-3xl overflow-hidden"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-2xl bg-card border border-border-soft shadow-3xl rounded-[2rem] md:rounded-[3rem] overflow-hidden"
             >
               <form
                 onSubmit={handleSearchSubmit}
-                className="flex items-center px-6 py-5 border-b border-border-soft"
+                className="flex items-center px-6 md:px-10 py-6 md:py-8 border-b border-border-soft"
               >
-                <Search className="text-txt-muted mr-4" size={18} />
+                <Search className="text-brand-primary mr-4 md:mr-6" size={20} />
                 <input
                   autoFocus
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="SEARCH ARCHIVE..."
-                  className="flex-1 bg-transparent border-none outline-none text-txt-main text-sm font-bold tracking-widest uppercase placeholder:text-txt-muted/20"
+                  placeholder="SEARCH ARCHIVES..."
+                  className="flex-1 bg-transparent border-none outline-none text-txt-main text-xs md:text-sm font-medium tracking-[0.2em] uppercase placeholder:opacity-20"
                 />
                 <button
-                  type="button"
                   onClick={() => setIsSearchOpen(false)}
-                  className="text-[9px] font-bold text-txt-muted/40 border border-border-soft px-2 py-1 rounded-md uppercase"
+                  className="text-[10px] font-medium uppercase tracking-widest text-txt-muted ml-4"
                 >
                   Esc
                 </button>
               </form>
-              <div className="p-8 max-h-[300px] overflow-y-auto">
-                <p className="text-[10px] font-bold text-txt-muted uppercase tracking-widest mb-4">
-                  Quick Links
-                </p>
-                <div className="grid grid-cols-1 gap-2">
+              <div className="p-8 md:p-10">
+                <div className="flex items-center gap-3 mb-6 opacity-40">
+                  <ShieldCheck size={12} className="text-brand-primary" />
+                  <p className="text-[9px] font-medium text-txt-muted uppercase tracking-[0.4em]">
+                    Protocol Suggested Nodes
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <button
                     onClick={() => navigate("/blogs")}
-                    className="flex items-center justify-between p-3 rounded-xl hover:bg-soft text-txt-muted hover:text-txt-main transition-all"
+                    className="text-left p-5 rounded-2xl bg-soft/30 hover:bg-soft transition-all border border-border-soft flex flex-col gap-1 group"
                   >
-                    <span className="text-[11px] font-bold uppercase tracking-widest">
-                      View All Posts
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-txt-main">
+                      Engineering Feed
                     </span>
-                    <Command size={12} />
+                    <span className="text-[9px] text-txt-muted uppercase tracking-tighter opacity-60 group-hover:opacity-100 transition-opacity">
+                      Technical dispatches and logs
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => navigate("/categories")}
+                    className="text-left p-5 rounded-2xl bg-soft/30 hover:bg-soft transition-all border border-border-soft flex flex-col gap-1 group"
+                  >
+                    <span className="text-[10px] font-medium uppercase tracking-widest text-txt-main">
+                      Design Systems
+                    </span>
+                    <span className="text-[9px] text-txt-muted uppercase tracking-tighter opacity-60 group-hover:opacity-100 transition-opacity">
+                      Visual architecture notes
+                    </span>
                   </button>
                 </div>
               </div>

@@ -98,3 +98,67 @@
     @apply flex items-center justify-center;
   }
 }
+
+.animation_btn{
+position:relative;
+  --angle: 0deg;
+  --glow-color: var(--color-brand-primary);
+  --glow-size: 3px;
+  --blur-amount: 1px;
+  border: 1px solid var(--color-brand-primary)
+}
+
+.animation_btn::before{
+  position: absolute;
+  content: '';
+  inset: calc(-.6*var(--glow-size));
+  background: conic-gradient(
+    from var(--angle),
+    var(--glow-color) 0deg,
+    var(--glow-color) 10deg,
+    transparent 20deg,
+    transparent 280deg,
+    var(--glow-color) 80deg
+  );
+  border-radius: inherit;
+  animation: rotate-angle 3s linear infinite;
+  filter: blur(var(--blur-amount));
+  z-index: -2;
+}
+
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-angle {
+  from { --angle: 0deg; }
+  to   { --angle: 360deg; }
+}
+
+.no-scrollbar {
+  scroll-snap-type: x mandatory;
+}
+
+.no-scrollbar > div {
+  scroll-snap-align: start;
+}
+
+/* Hide scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes loader-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-loader-slide {
+  animation: loader-slide 1.5s infinite ease-in-out;
+}

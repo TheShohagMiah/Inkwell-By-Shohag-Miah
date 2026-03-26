@@ -9,69 +9,75 @@ import {
   Globe,
   Zap,
   Activity,
+  Terminal,
 } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-main border-t border-border-soft pt-32 pb-16 overflow-hidden transition-colors">
-      {/* BACKGROUND WATERMARK */}
-      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[20vw] font-bold text-txt-main opacity-[0.02] select-none leading-none tracking-tighter -z-0 pointer-events-none uppercase italic">
+    <footer className="relative bg-main border-t border-border-soft pt-20 pb-20 overflow-hidden transition-colors duration-500">
+      {/* 01 / BACKGROUND TEXTURE (SYSTEM WATERMARK) */}
+      <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-[22vw] font-medium text-txt-main opacity-[0.015] select-none leading-none tracking-tighter -z-0 pointer-events-none uppercase italic">
         InkWell
       </div>
 
       <div className="max-w-7xl mx-auto px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-20 md:gap-12">
-          {/* BRAND COLUMN */}
-          <div className="md:col-span-5 space-y-10">
-            <Link to="/" className="flex items-center gap-4 group w-fit">
-              <div className="w-12 h-12 bg-txt-main border border-border-base rounded-2xl flex items-center justify-center text-main transition-transform duration-500 group-hover:scale-105 shadow-xl">
-                <Zap size={22} strokeWidth={2.5} />
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-24 lg:gap-16">
+          {/* BRAND ARCHIVE COLUMN */}
+          <div className="md:col-span-5 space-y-12">
+            <Link to="/" className="flex items-center gap-5 group w-fit">
+              <div className="w-14 h-14 bg-txt-main border border-border-soft rounded-[1.25rem] flex items-center justify-center text-main transition-all duration-700 group-hover:rotate-[360deg] shadow-2xl">
+                <Zap size={24} strokeWidth={1.5} />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-[0.2em] text-txt-main uppercase">
+                <span className="text-2xl font-medium tracking-[0.3em] text-txt-main uppercase">
                   InkWell
                 </span>
-                <span className="text-[9px] font-bold text-txt-muted uppercase tracking-[0.4em]">
-                  Editorial Group
+                <span className="text-[10px] font-medium text-brand-primary uppercase tracking-[0.5em] mt-1">
+                  Editorial Registry
                 </span>
               </div>
             </Link>
 
-            <p className="max-w-xs text-sm text-txt-muted font-light leading-relaxed tracking-tight">
+            <p className="max-w-xs text-[13px] text-txt-muted font-medium leading-relaxed tracking-wide opacity-80">
               A sanctuary for technical rigor and the art of modern digital
-              craftsmanship. Documenting the frontier of web architecture.
+              craftsmanship. Documenting the frontier of web architecture and
+              system design principles.
             </p>
 
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               {[Twitter, Github, Instagram, Linkedin].map((Icon, i) => (
                 <button
                   key={i}
-                  className="p-3.5 rounded-xl bg-soft border border-border-soft text-txt-muted hover:text-txt-main hover:bg-main transition-all cursor-pointer"
+                  className="p-4 rounded-2xl bg-soft/50 border border-border-soft text-txt-muted hover:text-brand-primary hover:bg-main transition-all cursor-pointer group"
                 >
-                  <Icon size={14} strokeWidth={2.5} />
+                  <Icon
+                    size={16}
+                    strokeWidth={1.5}
+                    className="group-hover:scale-110 transition-transform"
+                  />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* NAVIGATION COLUMNS */}
-          <div className="md:col-span-2 space-y-8">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-txt-muted flex items-center gap-2">
-              <div className="w-4 h-[1px] bg-border-base" /> Index
+          {/* INDEX NAVIGATION */}
+          <div className="md:col-span-2 space-y-10">
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.4em] text-txt-muted flex items-center gap-3 opacity-50">
+              <div className="w-6 h-[1px] bg-border-soft" /> Index
             </h4>
-            <ul className="space-y-4">
+            <ul className="space-y-5">
               {["Archive", "Engineering", "Design", "Authors"].map((item) => (
                 <li key={item}>
                   <Link
                     to={`/${item.toLowerCase()}`}
-                    className="text-[11px] font-bold uppercase tracking-widest text-txt-main hover:text-txt-muted transition-all flex items-center gap-2 group"
+                    className="text-[11px] font-medium uppercase tracking-[0.2em] text-txt-main hover:text-brand-primary transition-all flex items-center gap-2 group"
                   >
                     {item}
                     <ArrowUpRight
-                      size={10}
-                      className="opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0"
+                      size={12}
+                      className="opacity-0 -translate-x-2 transition-all duration-500 group-hover:opacity-100 group-hover:translate-x-0"
                     />
                   </Link>
                 </li>
@@ -79,16 +85,17 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="md:col-span-2 space-y-8">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-txt-muted flex items-center gap-2">
-              <div className="w-4 h-[1px] bg-border-base" /> Legal
+          {/* LEGAL NODES */}
+          <div className="md:col-span-2 space-y-10">
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.4em] text-txt-muted flex items-center gap-3 opacity-50">
+              <div className="w-6 h-[1px] bg-border-soft" /> Registry
             </h4>
-            <ul className="space-y-4">
+            <ul className="space-y-5">
               {["Privacy", "Terms", "Licensing", "Contact"].map((item) => (
                 <li key={item}>
                   <Link
                     to={`/${item.toLowerCase()}`}
-                    className="text-[11px] font-bold uppercase tracking-widest text-txt-main hover:text-txt-muted transition-all"
+                    className="text-[11px] font-medium uppercase tracking-[0.2em] text-txt-main hover:text-brand-primary transition-all"
                   >
                     {item}
                   </Link>
@@ -97,50 +104,54 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* NEWSLETTER COLUMN */}
-          <div className="md:col-span-3 space-y-8">
-            <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-txt-muted flex items-center gap-2">
-              <div className="w-4 h-[1px] bg-border-base" /> Newsletter
+          {/* COMMUNICATION CHANNEL */}
+          <div className="md:col-span-3 space-y-10">
+            <h4 className="text-[10px] font-medium uppercase tracking-[0.4em] text-txt-muted flex items-center gap-3 opacity-50">
+              <div className="w-6 h-[1px] bg-border-soft" /> Channel
             </h4>
             <div className="relative group">
               <input
                 type="email"
-                placeholder="EMAIL_ADDRESS"
-                className="w-full bg-soft border border-border-soft rounded-2xl px-6 py-4 text-[11px] font-bold tracking-widest uppercase outline-none focus:border-txt-main/40 transition-all text-txt-main placeholder:text-txt-muted/20"
+                placeholder="REGISTRY_EMAIL"
+                className="w-full bg-soft/30 border border-border-soft rounded-[1.5rem] px-8 py-5 text-[10px] font-medium tracking-[0.3em] uppercase outline-none focus:border-brand-primary/40 transition-all text-txt-main placeholder:opacity-20"
               />
-              <button className="absolute right-2 top-2 p-2.5 bg-txt-main text-main rounded-xl hover:opacity-90 transition-all cursor-pointer shadow-lg">
-                <ArrowUpRight size={16} strokeWidth={2.5} />
+              <button className="absolute right-3 top-3 p-3 bg-txt-main text-main rounded-[1rem] hover:opacity-90 transition-all cursor-pointer shadow-2xl">
+                <ArrowUpRight size={18} strokeWidth={1.5} />
               </button>
             </div>
-            <div className="space-y-3">
-              <p className="text-[9px] text-txt-muted font-bold uppercase tracking-[0.2em] flex items-center gap-3">
-                <Globe size={12} className="opacity-30" /> Global Distribution
+            <div className="space-y-4 pt-2">
+              <p className="text-[9px] text-txt-muted font-medium uppercase tracking-[0.3em] flex items-center gap-4">
+                <Globe size={14} className="opacity-30" /> Distributed Node
               </p>
-              <p className="text-[9px] text-txt-muted font-bold uppercase tracking-[0.2em] flex items-center gap-3">
-                <Zap size={12} className="opacity-30" /> Principal Insights
+              <p className="text-[9px] text-txt-muted font-medium uppercase tracking-[0.3em] flex items-center gap-4">
+                <Terminal size={14} className="opacity-30" /> Encrypted Feed
               </p>
             </div>
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
-        <div className="mt-32 pt-12 border-t border-border-soft flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <p className="text-[10px] font-bold text-txt-muted uppercase tracking-[0.3em]">
+        {/* TERMINAL STATUS BAR */}
+        <div className="mt-40 pt-16 border-t border-border-soft flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="flex flex-col md:flex-row items-center gap-10">
+            <p className="text-[10px] font-medium text-txt-muted uppercase tracking-[0.4em] opacity-60">
               © {currentYear} InkWell Editorial Group
             </p>
-            <div className="flex items-center gap-3 px-4 py-1.5 bg-soft rounded-lg border border-border-soft">
-              <Activity size={12} className="text-emerald-500 animate-pulse" />
-              <span className="text-[9px] font-bold uppercase tracking-widest text-txt-muted">
-                Systems: <span className="text-emerald-500">Nominal</span>
+            <div className="flex items-center gap-4 px-6 py-2 bg-soft/40 rounded-full border border-border-soft">
+              <Activity
+                size={14}
+                className="text-brand-primary animate-pulse"
+                strokeWidth={2.5}
+              />
+              <span className="text-[9px] font-medium uppercase tracking-[0.3em] text-txt-muted">
+                Interface: <span className="text-brand-primary">Optimal</span>
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-txt-muted">
-            <span className="opacity-40">Build 2026.4.12</span>
-            <div className="w-1 h-1 bg-border-base rounded-full" />
-            <span className="text-txt-main">Protocol by Rivera</span>
+          <div className="flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.3em] text-txt-muted">
+            <span className="opacity-30">Revision 2026.04.B</span>
+            <div className="w-1.5 h-1.5 bg-brand-primary rounded-full" />
+            <span className="text-txt-main opacity-80">Protocol Rivera-9</span>
           </div>
         </div>
       </div>

@@ -5,25 +5,24 @@ import Footer from "../components/shared/Footer";
 
 const MainLayout = () => {
   return (
-    // min-h-screen ensures the footer stays at the bottom even on empty pages
-    <div className="">
-      {/* 1. FIXED NAVIGATION */}
+    /* flex flex-col min-h-screen: 
+      Standard industry practice to keep footer at the bottom.
+    */
+    <div className="flex flex-col min-h-screen transition-colors duration-500">
+      {/* 01 / NAVIGATION LAYER */}
       <Navbar />
 
-      {/* 2. MAIN CONTENT AREA */}
-      <main className="grow">
-        {/* pt-20: Padding top for mobile navbar
-          sm:pt-24: Increased padding for desktop navbar
-          mx-auto: Centers the content
-          max-w-7xl: Prevents the blog from looking "stretched" on 4K monitors
-          px-4 to px-8: Responsive side padding so text doesn't hit the screen edges
+      {/* 02 / DYNAMIC CONTENT NODE */}
+      <main className="flex-grow pt-24 sm:pt-32">
+        {/* max-w-7xl: Standard container width for readability.
+          mx-auto: Centers the content node.
         */}
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="container max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 pb-20">
           <Outlet />
         </div>
       </main>
 
-      {/* 3. FOOTER */}
+      {/* 03 / TERMINAL LAYER */}
       <Footer />
     </div>
   );
